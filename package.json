@@ -1,0 +1,24 @@
+{
+  "name": "supplementary-ast-based-deobfuscation-materials",
+  "version": "1.0.0",
+  "description": "This repository contains any source code that can be found in the ReverseJS blog posts. You will need to install the dependencies yourself, as I have not included a package.json with them.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SteakEnthusiast/Supplementary-AST-Based-Deobfuscation-Materials.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SteakEnthusiast/Supplementary-AST-Based-Deobfuscation-Materials/issues"
+  },
+  "homepage": "https://github.com/SteakEnthusiast/Supplementary-AST-Based-Deobfuscation-Materials#readme",
+  "dependencies": {
+    "@babel/core": "^7.18.2",
+    "fs": "^0.0.1-security",
+    "js-beautify": "^1.14.3"
+  }
+}
