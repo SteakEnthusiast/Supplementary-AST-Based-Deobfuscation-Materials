@@ -70,5 +70,5 @@
    });
  }
  
- deobfuscate(readFileSync("./deadLogicalCodeObfuscated.js", "utf8"));
+ deobfuscate(readFileSync("./unreachableLogicalCodeObfuscated.js", "utf8"));
  
