@@ -11,4 +11,5 @@ let j = 32 | 36;
 let k = !0;
 let l = +"12";
 let m = 1 + !0;
-console.log(a, b, c, d, e, f, g, h, i, j, k, l);
+let z = !362 - 545 * 132 / 1435 ^ 132;
+console.log(a, b, c, d, e, f, g, h, i, j, k, l, m, z);

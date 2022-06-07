@@ -50,6 +50,10 @@ function multiple(a, b) {
   return a + !b;
 }
 
+function multipleOps(a, b, c, d, e) {
+  return (!a - (c * b) / d) ^ e;
+}
+
 let a = add(12, 45);
 let b = subtract(32, 931);
 let c = multiply(12, 12);
@@ -63,5 +67,6 @@ let j = bitwiseOr(36, 32);
 let k = falseUnary(0);
 let l = unaryPlus("12");
 let m = multiple(1, 0);
+let z = multipleOps(362, 132, 545, 1435, 132);
 
-console.log(a, b, c, d, e, f, g, h, i, j, k, l);
+console.log(a, b, c, d, e, f, g, h, i, j, k, l, m, z);

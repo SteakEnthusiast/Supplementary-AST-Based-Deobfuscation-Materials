@@ -1,7 +1,7 @@
 /**
  * Deobfuscator.js
  * The babel script used to deobfuscate the target file
- *
+ * This is much more useful than the old version, as it can handle multiple operations and parameters.
  */
 const parser = require("@babel/parser");
 const traverse = require("@babel/traverse").default;
@@ -24,7 +24,6 @@ function deobfuscate(source) {
     FunctionDeclaration(path) {
       const { node, scope } = path;
       const { id, body, params } = node;
-      if (id.name == "leftShift") debugger;
       if (!t.isReturnStatement(body.body[0])) return;
       const proxyExpression = body.body[0].argument;
       if (
@@ -39,8 +38,7 @@ function deobfuscate(source) {
         let { parentPath } = referencePath;
 
         if (!t.isCallExpression(parentPath)) return;
-      
-        
+
         const proxyExpressionCopyAst = parser.parse(
           generate(proxyExpression).code
         );
@@ -54,10 +52,7 @@ function deobfuscate(source) {
             }
           },
         };
-        traverse(
-          proxyExpressionCopyAst,
-          replaceVarsInExpressionWithArguments
-        );
+        traverse(proxyExpressionCopyAst, replaceVarsInExpressionWithArguments);
         parentPath.replaceWithMultiple(proxyExpressionCopyAst.program.body);
       }
       path.remove();

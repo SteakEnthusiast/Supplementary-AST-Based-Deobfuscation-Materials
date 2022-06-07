@@ -1,7 +1,3 @@
-function multiple(a, b) {
-  return a + !b;
-}
-
 let a = 12 + 45;
 let b = 931 - 32;
 let c = 12 * 12;
@@ -14,5 +10,5 @@ let i = 57 & 32;
 let j = 32 | 36;
 let k = !0;
 let l = +"12";
-let m = multiple(1, 0);
+let m = 1 + !0;
 console.log(a, b, c, d, e, f, g, h, i, j, k, l);
