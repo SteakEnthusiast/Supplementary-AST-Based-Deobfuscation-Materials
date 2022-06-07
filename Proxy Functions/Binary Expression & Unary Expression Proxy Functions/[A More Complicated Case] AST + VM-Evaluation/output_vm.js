@@ -1,0 +1,15 @@
+;;
+let a = 57;
+let b = 899;
+let c = 144;
+let d = 2;
+let e = 1;
+let f = 90;
+let g = 190316544;
+let h = 0;
+let i = 32;
+let j = 36;
+let k = true;
+let l = 12;
+let m = 2;
+console.log(a, b, c, d, e, f, g, h, i, j, k, l);
