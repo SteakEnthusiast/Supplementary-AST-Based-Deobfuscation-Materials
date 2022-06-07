@@ -21,7 +21,7 @@ function deobfuscate(source) {
   //Parse AST of Source Code
   const ast = parser.parse(source);
 
-  // Visitor for constant folding
+  // Visitor for removing unused variables
   const removedUnusedVariablesVisitor = {
     "VariableDeclarator|FunctionDeclaration"(path) {
       const { node, scope } = path;
