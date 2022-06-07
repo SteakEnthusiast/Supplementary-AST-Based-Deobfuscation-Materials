@@ -1,7 +1,8 @@
 /**
  * Deobfuscator.js
  * The babel script used to deobfuscate the target file
- *
+ * THIS IS OLD AND WILL NOT BE INCLUDED IN THE FINAL ARTICLE
+ * This deobfuscator only handles a specific simple case. I've added an error check to show where this deobfuscator would break. The one in "../AST-Based Simplfication" should do the trick better.
  */
 const parser = require("@babel/parser");
 const traverse = require("@babel/traverse").default;
@@ -24,17 +25,37 @@ function deobfuscate(source) {
     FunctionDeclaration(path) {
       const { node, scope } = path;
       const { id, body, params } = node;
-      if (id.name == "leftShift") debugger;
+      // Make sure function returns immediately
       if (!t.isReturnStatement(body.body[0])) return;
       const proxyExpression = body.body[0].argument;
+      // Only apply this function to BinaryExpressions and UnaryExpressions
       if (
         !t.isBinaryExpression(proxyExpression) &&
         !t.isUnaryExpression(proxyExpression)
       )
         return;
       let left, right, operator;
+      /**
+       * We'll modify this object based on if it's a BinaryExpression or UnaryExpression
+       * If it's a BinaryExpression, functionObj will have a property 'leftParamFirst' that indicates whether the first argument is first
+       * ex.
+       * function add(a, b) {
+       *    return a + b;
+       * }
+       * => leftParamFirst = true
+       *
+       * function subtract(a, b) {
+       *   return b - a;
+       * }
+       * => leftParamFirst = false
+       *
+       * We don't need to worry about this for a UnaryExpression
+       */
+
       let functionObj;
+
       if (t.isBinaryExpression(proxyExpression)) {
+        // This only handles 2 parameter functions
         if (params.length !== 2) return;
         let leftParamFirst;
         ({ left, right, operator } = proxyExpression);
@@ -46,6 +67,13 @@ function deobfuscate(source) {
         ) {
           leftParamFirst = false;
         } else {
+          /**Unfortunately, this function cannot handle more complex operations like:
+           *
+           * function multiple(a, b) {
+           *    return a + !b;
+           * }
+           *
+           */
           console.log("Don't know how to handle: \n", generate(path.node).code);
           return;
         }
@@ -66,12 +94,20 @@ function deobfuscate(source) {
 
       const { constant, referencePaths } = scope.getBinding(id.name);
       if (!constant) return;
+      // Iterate over all times the proxy function is referenced.
+      // referencePath will be a path to an Identifier. To get the CallExpression path, we should get it's parentPath
+
+      // This will become false if the function is referenced, but not within a CallExpression. In that case, we can't remove the original function, but we can still simplify all calls to it
+      let shouldDelete = true;
       for (let referencePath of referencePaths) {
         let { parentPath } = referencePath;
 
-        if (!t.isCallExpression(parentPath)) return;
+        if (!t.isCallExpression(parentPath)) {
+          shouldDelete = false;
+        }
         let { arguments } = parentPath.node;
         if (functionObj.type === "BinaryExpression") {
+          // Case: left parameter goes first
           if (functionObj.leftParamFirst) {
             parentPath.replaceWith(
               t.binaryExpression(
@@ -81,6 +117,7 @@ function deobfuscate(source) {
               )
             );
           } else {
+            // Case: right parameter goes first
             parentPath.replaceWith(
               t.binaryExpression(
                 functionObj.operator,
@@ -89,13 +126,16 @@ function deobfuscate(source) {
               )
             );
           }
+          // Case: UnaryExpression
         } else if (functionObj.type === "UnaryExpression") {
           parentPath.replaceWith(
             t.unaryExpression(functionObj.operator, arguments[0])
           );
         }
       }
-      path.remove();
+      if (shouldDelete) {
+        path.remove();
+      }
     },
   };
 

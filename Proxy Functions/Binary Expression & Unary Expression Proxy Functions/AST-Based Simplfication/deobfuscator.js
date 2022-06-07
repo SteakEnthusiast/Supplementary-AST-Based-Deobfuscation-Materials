@@ -58,7 +58,6 @@ function deobfuscate(source) {
           proxyExpressionCopyAst,
           replaceVarsInExpressionWithArguments
         );
-        debugger
         parentPath.replaceWithMultiple(proxyExpressionCopyAst.program.body);
       }
       path.remove();
