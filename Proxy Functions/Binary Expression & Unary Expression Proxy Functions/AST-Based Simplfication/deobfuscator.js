@@ -20,7 +20,7 @@ function deobfuscate(source) {
   const ast = parser.parse(source);
 
   // Visitor for constant folding
-  const simplifyBinaryExpressions = {
+  const simplifyBinaryAndUnaryProxyFunctions = {
     FunctionDeclaration(path) {
       const { node, scope } = path;
       const { id, body, params } = node;
@@ -83,7 +83,7 @@ function deobfuscate(source) {
   };
 
   // Execute the visitor
-  traverse(ast, simplifyBinaryExpressions);
+  traverse(ast, simplifyBinaryAndUnaryProxyFunctions);
 
   // Code Beautification
   let deobfCode = generate(ast, { comments: false }).code;
