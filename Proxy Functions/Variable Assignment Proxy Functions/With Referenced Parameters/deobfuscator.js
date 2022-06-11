@@ -44,7 +44,7 @@ function deobfuscate(source) {
           return;
       }
 
-      // Make sure parameters aren't referenced
+      // Check if the function references its parameters
 
       let paramsReferenced = false;
       for (param of params) {
@@ -52,16 +52,25 @@ function deobfuscate(source) {
           paramsReferenced = true;
         }
       }
+      // This will become false if the function is referenced, but not within a CallExpression. In that case, we can't remove the original function, but we can still simplify all calls to it
+      let shouldDelete = true;
 
-      //params not referenced
+      // Iterate through all references to the proxy function
       for (let referencePath of referencePaths) {
         let { parentPath } = referencePath;
-        if (!parentPath.isCallExpression()) return;
+        // Make sure it's a call expression
+        if (!parentPath.isCallExpression()) {
+          shouldDelete = false;
+        }
 
+        // If it references the parameters:
         if (paramsReferenced) {
+          // Clone all nodes in the function
           let assignmentProxyFuncBodyClone = parser.parse(
             generate(bodyPath.node).code
           );
+
+          // Iterate through all references to the identifiers and replace them with the arguments at time of call
           const replaceVarsInExpressionWithArguments = {
             Identifier(_path) {
               for (let i = 0; i < params.length; i++) {
@@ -88,11 +97,15 @@ function deobfuscate(source) {
           //   assignmentProxyFuncBodyClone.program.body
           // );
           // But this would put unecessary block statements in the final code
-        } else {
+        }
+        // If parameters aren't referenced:
+        else {
           parentPath.replaceWithMultiple(bodyPath.node.body);
         }
       }
-      path.remove();
+      if (shouldDelete) {
+        path.remove();
+      }
     },
   };
 
