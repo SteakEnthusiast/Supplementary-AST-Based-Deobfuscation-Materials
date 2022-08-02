@@ -58,11 +58,18 @@ function deobfuscate(source) {
             path.replaceInline(node);
           }
         });
+      } else if (t.isAssignmentExpression(node)) {
+        const { expressions } = node.right;
+        expressions.forEach((node, indx) => {
+          if (indx !== expressions.length - 1) {
+            parentPath.insertBefore(node);
+          } else {
+            path.replaceInline(node);
+          }
+        });
       } else if (
-        t.isAssignmentExpression(node) ||
         t.isConditionalExpression(node) ||
         t.isLogicalExpression(node) ||
-        t.isIfStatement(node) ||
         t.isForStatement(node)
       ) {
         return;

@@ -6,6 +6,9 @@ function sequenceTest(a, b, c, d, z) {
   console.log("hi")
   z = 13
   var x = 69;
+  executeAFunction()
+  x = 13
+  z = d;
   var e, f;
   e = 5;
   c ? f = 12 : f = 13;
