@@ -19,52 +19,34 @@ function deobfuscate(source) {
   //Parse AST of Source Code
   const ast = parser.parse(source);
 
+  // helper function
+
   // Visitor for replacing sequence expressions
 
-  const unroll = {
+  const unrollSequenceExpressions = {
     SequenceExpression(path) {
+      let replaceOneLevelAboveParent = false;
       const parentPath = path.parentPath;
       const { node } = parentPath;
+      const { expressions } = path.node;
 
-      if (t.isIfStatement(node)) {
-        if (!t.isSequenceExpression(test)) return;
-        const { test } = node;
-        const { expressions } = test;
+      if (t.isVariableDeclarator(node)) {
+        replaceOneLevelAboveParent = true;
+      }
 
+      if (
+        t.isIfStatement(node) ||
+        t.isReturnStatement(node) ||
+        t.isVariableDeclarator(node) ||
+        t.isAssignmentExpression(node)
+      ) {
         expressions.forEach((expression, index) => {
           if (index !== expressions.length - 1) {
-            parentPath.insertBefore(expression);
+            replaceOneLevelAboveParent
+              ? parentPath.parentPath.insertBefore(expression)
+              : parentPath.insertBefore(expression);
           } else {
-            node.test = expression;
-          }
-        });
-      } else if (t.isReturnStatement(node)) {
-        if (t.isSequenceExpression(node.argument)) {
-          const { expressions } = node.argument;
-          expressions.forEach((node, indx) => {
-            if (indx !== expressions.length - 1) {
-              parentPath.insertBefore(node);
-            } else {
-              path.replaceInline(node);
-            }
-          });
-        }
-      } else if (t.isVariableDeclarator(node)) {
-        const { expressions } = node.init;
-        expressions.forEach((node, indx) => {
-          if (indx !== expressions.length - 1) {
-            parentPath.parentPath.insertBefore(node);
-          } else {
-            path.replaceInline(node);
-          }
-        });
-      } else if (t.isAssignmentExpression(node)) {
-        const { expressions } = node.right;
-        expressions.forEach((node, indx) => {
-          if (indx !== expressions.length - 1) {
-            parentPath.insertBefore(node);
-          } else {
-            path.replaceInline(node);
+            path.replaceInline(expression);
           }
         });
       } else if (
@@ -74,13 +56,12 @@ function deobfuscate(source) {
       ) {
         return;
       } else {
-        const expressions = path.node.expressions;
         path.replaceInline(expressions);
       }
     },
   };
   // Execute the visitor
-  traverse(ast, unroll);
+  traverse(ast, unrollSequenceExpressions);
 
   // Code Beautification
   let deobfCode = generate(ast, { comments: false }).code;
