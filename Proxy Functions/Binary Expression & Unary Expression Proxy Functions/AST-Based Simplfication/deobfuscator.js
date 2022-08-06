@@ -49,8 +49,13 @@ function deobfuscate(source) {
 
         // Don't delete if referenced, but not in a call expression.
         // This is implemented for sake of generality. Perhaps your obfuscated file has a self-integrity check somewhere idk lol
-        if (!t.isCallExpression(parentPath)) {
+        if (
+          !t.isCallExpression(parentPath) ||
+          (t.isCallExpression(parentPath) &&
+            parentPath.node.callee !== referencePath.node)
+        ) {
           shouldDelete = false;
+          continue;
         }
 
         // Clone the expression into it's own AST so we can modify it

@@ -1,3 +1,7 @@
+function CantBeRemoved(a, b) {
+  return a + b + 20;
+}
+
 function add(a, b) {
   return a + b;
 }
@@ -68,5 +72,12 @@ let k = falseUnary(0);
 let l = unaryPlus("12");
 let m = multiple(1, 0);
 let z = multipleOps(362, 132, 545, 1435, 132);
+
+// Test cant be removed
+
+if (CantBeRemoved) {
+  CantBeRemoved.toString();
+  CantBeRemoved(1, 3);
+}
 
 console.log(a, b, c, d, e, f, g, h, i, j, k, l, m, z);

@@ -1,3 +1,7 @@
+function CantBeRemoved(a, b) {
+  return a + b + 20;
+}
+
 let a = 12 + 45;
 let b = 931 - 32;
 let c = 12 * 12;
@@ -12,4 +16,10 @@ let k = !0;
 let l = +"12";
 let m = 1 + !0;
 let z = !362 - 545 * 132 / 1435 ^ 132;
+
+if (CantBeRemoved) {
+  CantBeRemoved.toString();
+  1 + 3 + 20;
+}
+
 console.log(a, b, c, d, e, f, g, h, i, j, k, l, m, z);
