@@ -52,7 +52,8 @@ function deobfuscate(source) {
       } else if (
         t.isConditionalExpression(node) ||
         t.isLogicalExpression(node) ||
-        t.isFor(node)
+        t.isFor(node) ||
+        t.isWhile(node)
       ) {
         return;
       } else {
