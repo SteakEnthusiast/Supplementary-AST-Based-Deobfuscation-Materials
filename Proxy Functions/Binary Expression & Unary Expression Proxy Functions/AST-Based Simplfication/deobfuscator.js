@@ -79,7 +79,7 @@ function deobfuscate(source) {
         traverse(proxyExpressionCopyAst, replaceVarsInExpressionWithArguments);
 
         // Replace the CallExpression with the modified proxy expression
-        parentPath.replaceWithMultiple(proxyExpressionCopyAst.program.body);
+        parentPath.replaceInline(proxyExpressionCopyAst.program.body);
       }
       if (shouldDelete) {
         path.remove();

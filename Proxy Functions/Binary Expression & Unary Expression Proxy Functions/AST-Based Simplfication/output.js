@@ -19,7 +19,7 @@ let z = !362 - 545 * 132 / 1435 ^ 132;
 
 if (CantBeRemoved) {
   CantBeRemoved.toString();
-  1 + 3 + 20;
+  let cantbeRemovedResult = 1 + 3 + 20;
 }
 
 console.log(a, b, c, d, e, f, g, h, i, j, k, l, m, z);

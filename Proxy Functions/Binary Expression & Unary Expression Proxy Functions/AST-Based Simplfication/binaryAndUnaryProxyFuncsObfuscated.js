@@ -77,7 +77,7 @@ let z = multipleOps(362, 132, 545, 1435, 132);
 
 if (CantBeRemoved) {
   CantBeRemoved.toString();
-  CantBeRemoved(1, 3);
+  let cantbeRemovedResult = CantBeRemoved(1, 3);
 }
 
 console.log(a, b, c, d, e, f, g, h, i, j, k, l, m, z);
