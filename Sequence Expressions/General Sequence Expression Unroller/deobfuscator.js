@@ -37,8 +37,8 @@ function deobfuscate(source) {
       if (
         t.isIfStatement(node) ||
         t.isReturnStatement(node) ||
-        t.isVariableDeclarator(node) ||
-        t.isAssignmentExpression(node)
+        t.isAssignmentExpression(node) ||
+        t.isVariableDeclarator(node)
       ) {
         expressions.forEach((expression, index) => {
           if (index !== expressions.length - 1) {
@@ -46,18 +46,21 @@ function deobfuscate(source) {
               ? parentPath.parentPath.insertBefore(expression)
               : parentPath.insertBefore(expression);
           } else {
-            path.replaceInline(expression);
+            path.replaceWithMultiple(expression);
           }
         });
       } else if (
         t.isConditionalExpression(node) ||
         t.isLogicalExpression(node) ||
         t.isFor(node) ||
-        t.isWhile(node)
+        t.isWhile(node) ||
+        t.isCallExpression(node) ||
+        t.isSequenceExpression(node) ||
+        t.isArrayExpression(node)
       ) {
         return;
       } else {
-        path.replaceInline(expressions);
+        path.replaceWithMultiple(expressions);
       }
     },
   };
