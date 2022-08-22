@@ -6,11 +6,20 @@ class Person {
   }
 
   sayHello() {
-    let helloStatement = "Hello, my name is " + this["name"] + ". I go to " + this["school"] + " and my favourite animal is a " + this["favAnimal"];
+    let helloStatement =
+      "Hello, my name is " +
+      this["name"] +
+      ". I go to " +
+      this["school"] +
+      " and my favourite animal is a " +
+      this["favAnimal"];
     console["log"](helloStatement);
   }
-
 }
 
-const examplePerson = new Person("David", "University of Obfuscation", "Penguin");
+const examplePerson = new Person(
+  "David",
+  "University of Obfuscation",
+  "Penguin"
+);
 examplePerson["sayHello"]();
